@@ -58,8 +58,10 @@ body{
 .badge{display:inline-block;padding:6px 10px;border:1px solid rgba(212,175,55,.4);border-radius:999px;color:var(--gold);font-weight:600}
 .social-proof{margin-top:10px;color:#cfcfd6}
 .social-proof .stars{color:var(--gold);margin-right:8px}
-.hero-visual{position:relative;min-height:420px;background:radial-gradient(circle at center,rgba(212,175,55,.1),transparent 70%)}
-#hero-3d{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero-visual{position:relative;min-height:320px;border-radius:14px;overflow:hidden}
+/* Remove image-specific styles and ensure canvas is visible */
+#hero-3d{display:block}
+.hero-visual img.hero-side{width:100%;height:100%;object-fit:cover;display:block;border-radius:14px}
 
 /* Features */
 .features{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:64px 20px}
