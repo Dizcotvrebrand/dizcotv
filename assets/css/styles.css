@@ -445,4 +445,7 @@ body#logo-splash-active {
 /* Hide Google stock widget, we control via our select */
 #google_translate_element{position:absolute;left:-9999px;top:-9999px;visibility:hidden;height:0;width:0;overflow:hidden}
 
+.site-header .lang-top{margin-left:6px}
+.site-header .lang-top select{min-width:120px;padding:5px 8px;font-size:.9em}
+
 
