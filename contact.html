@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Contact — Dizco Tv</title>
+	<link rel="stylesheet" href="assets/css/styles.css" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+	<header class="site-header">
+		<div class="container header-inner">
+			<a class="brand" href="index.html"><span class="brand-icon">▶</span> Dizco Tv</a>
+			<button class="nav-toggle" aria-label="Toggle navigation">☰</button>
+			<nav class="site-nav">
+				<a href="index.html">Home</a>
+				<a href="service.html">Service</a>
+				<a href="about.html">About</a>
+				<a href="app-rebrand.html">App Rebrand</a>
+				<a href="subscription.html">Subscription</a>
+				<a href="blog.html">Blog</a>
+				<a href="https://wa.me/6281216833353" target="_blank" rel="noopener" class="btn btn-gold active">Contact</a>
+			</nav>
+		</div>
+	</header>
+
+	<section class="page-hero">
+		<div class="container">
+			<h1>Contact</h1>
+			<p>Let's build your IPTV brand.</p>
+		</div>
+	</section>
+
+	<main class="container section">
+		<form id="contactForm" class="card">
+			<label>Full Name
+				<input name="name" placeholder="Your name" required />
+			</label>
+			<label>Email
+				<input name="email" type="email" placeholder="you@example.com" required />
+			</label>
+			<label>Message
+				<textarea name="message" rows="6" placeholder="Tell us what you need..." required></textarea>
+			</label>
+			<button class="btn btn-gold" type="submit">Send</button>
+			<p id="contactNote" style="margin:8px 0 0;color:#cfcfd6">We respond within 24 hours.</p>
+		</form>
+	</main>
+
+	<footer class="site-footer">
+		<div class="container footer-inner">
+			<p>© <span id="year"></span> Dizco Tv. All rights reserved.</p>
+			<div class="footer-links">
+				<a href="about.html">About</a>
+				<a href="subscription.html">Subscription</a>
+			</div>
+		</div>
+	</footer>
+
+<div class="fab-whatsapp">
+	<a href="https://wa.me/6281216833353" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+		<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+			<path d="M20 3.9A9.9 9.9 0 006.7 19.4L4 21l1.7-2.7A9.9 9.9 0 1020 3.9z" fill="#fff"/>
+			<path d="M16.6 13.3c-.2-.1-1.4-.7-1.6-.8-.2-.1-.3-.1-.5.1-.1.2-.6.8-.7.9-.1.1-.2.1-.4 0s-1.1-.4-2.1-1.3c-.8-.7-1.3-1.6-1.5-1.8-.1-.2 0-.3.1-.5.1-.1.2-.2.3-.3.1-.1.1-.2.2-.3.1-.1 0-.2 0-.3s-.5-1.2-.7-1.6c-.2-.4-.4-.3-.5-.3h-.4c-.2 0-.3 0-.5.2s-.6.6-.6 1.5.6 1.7.7 1.8c.1.2 1.1 2 2.8 2.9 1.7 1 1.7.7 2 .7.3 0 1-.4 1.1-.8.2-.4.2-.7.2-.8-.1-.2-.2-.2-.4-.3z" fill="#25D366"/>
+		</svg>
+	</a>
+</div>
+
+	<script type="module">
+		import { validateContactForm } from './assets/js/main.js';
+		const form = document.getElementById('contactForm');
+		const note = document.getElementById('contactNote');
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+			if (!validateContactForm(form)) {
+				note.textContent = 'Please correct the highlighted fields.';
+				return;
+			}
+			note.textContent = 'Thanks! We\'ll get back to you shortly.';
+			form.reset();
+		});
+	</script>
+	<script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
+
