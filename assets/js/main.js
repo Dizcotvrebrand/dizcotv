@@ -2,6 +2,23 @@
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
+// Apply stored language preference
+(function initLanguageSelector(){
+	try{
+		const root = document.documentElement;
+		const saved = localStorage.getItem('dizco_lang') || 'en';
+		root.lang = saved;
+		root.dir = saved === 'ar' ? 'rtl' : 'ltr';
+		const sel = document.getElementById('lang-select');
+		if (sel){ sel.value = saved; sel.addEventListener('change', () => {
+			const val = sel.value;
+			localStorage.setItem('dizco_lang', val);
+			root.lang = val;
+			root.dir = val === 'ar' ? 'rtl' : 'ltr';
+		}); }
+	}catch(e){/* ignore */}
+})();
+
 // Mobile nav toggle
 const toggle = document.querySelector('.nav-toggle');
 const nav = document.querySelector('.site-nav');
