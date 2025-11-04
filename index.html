@@ -331,35 +331,8 @@
 	<script type="module" src="assets/js/main.js"></script>
 	<!-- Three.js via CDN for the 3D hero -->
 	<script type="module" src="assets/js/home-3d.js"></script>
-	<script>
+    <script>
 window.addEventListener('DOMContentLoaded', function() {
-  var banner = document.querySelector('.top-banner');
-  var msgs = banner ? banner.querySelectorAll('.banner-msg') : null;
-  if(banner && msgs && msgs.length > 1) {
-    var current = 0;
-    function showMsg(idx) {
-      msgs[0].style.display = idx===0? 'inline-block' : 'none';
-      msgs[1].style.display = idx===1? 'inline-block' : 'none';
-    }
-    function doCycle(idx) {
-      showMsg(idx);
-      banner.classList.remove('out');
-      setTimeout(function(){
-        banner.classList.add('out');
-        setTimeout(function(){
-          banner.style.visibility = 'hidden';
-          setTimeout(function(){
-            current = 1-current;
-            showMsg(current);
-            banner.style.visibility = 'visible';
-            banner.classList.remove('out');
-            doCycle(current);
-          }, 5000);
-        }, 1200);
-      }, 10000);
-    }
-    doCycle(current);
-  }
   var splash = document.getElementById('logo-splash');
   if(splash) {
     document.body.style.overflow = 'hidden';

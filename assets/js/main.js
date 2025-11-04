@@ -107,6 +107,22 @@ if (document.readyState === 'loading') {
   fadeInCardsOnScroll();
 }
 
+// Top banner message cycle (usable on all pages)
+(function initTopBanner(){
+  const banner = document.querySelector('.top-banner');
+  const msgs = banner ? banner.querySelectorAll('.banner-msg') : null;
+  if(!banner || !msgs || msgs.length < 2) return;
+  let current = 0, running = false;
+  function showMsg(idx){
+    msgs.forEach((m,i)=>{ m.style.display = i===idx? 'inline-block':'none'; });
+  }
+  function cycle(){
+    if(running) return; running = true; showMsg(current); banner.classList.remove('out');
+    setTimeout(()=>{ banner.classList.add('out'); setTimeout(()=>{ banner.style.visibility='hidden'; setTimeout(()=>{ current = 1-current; showMsg(current); banner.style.visibility='visible'; banner.classList.remove('out'); running=false; cycle(); }, 5000); }, 1200); }, 10000);
+  }
+  cycle();
+})();
+
 // Christmas toast helper
 function showChristmasToast(){
   try{
