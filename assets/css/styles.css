@@ -218,6 +218,16 @@ label{font-weight:600}
 	.nav-toggle{display:inline-block}
 }
 
+@media (max-width: 540px){
+	.hero{padding:4px 0 4px}
+	.hero-grid{gap:8px}
+	.hero-copy h1{margin:2px 0 3px}
+	.hero-copy p{margin:0 0 6px}
+	.hero-ctas{gap:6px}
+	.hero-visual{min-height:160px}
+	.features{padding:28px 12px}
+}
+
 /* Catalog grid on App Rebrand page (Fiverr-like big cards) */
 .brand-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
 .brand-card{display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));border:1px solid rgba(212,175,55,.18);border-radius:16px;overflow:hidden;box-shadow:0 10px 26px rgba(0,0,0,.28);transition:transform .18s ease, box-shadow .18s ease}
