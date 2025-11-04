@@ -2,21 +2,43 @@
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
-// Apply stored language preference
-(function initLanguageSelector(){
-	try{
-		const root = document.documentElement;
-		const saved = localStorage.getItem('dizco_lang') || 'en';
-		root.lang = saved;
-		root.dir = saved === 'ar' ? 'rtl' : 'ltr';
-		const sel = document.getElementById('lang-select');
-		if (sel){ sel.value = saved; sel.addEventListener('change', () => {
-			const val = sel.value;
-			localStorage.setItem('dizco_lang', val);
-			root.lang = val;
-			root.dir = val === 'ar' ? 'rtl' : 'ltr';
-		}); }
-	}catch(e){/* ignore */}
+// Google Translate init and binding to our selectors
+(function setupTranslation(){
+	const root = document.documentElement;
+	const topSel = document.getElementById('lang-top');
+	const footSel = document.getElementById('lang-select');
+	const saved = localStorage.getItem('dizco_lang') || 'en';
+	function applyDir(lang){ root.lang = lang; root.dir = lang === 'ar' ? 'rtl' : 'ltr'; }
+	applyDir(saved);
+	if (topSel) topSel.value = saved; if (footSel) footSel.value = saved;
+
+	function setGoogleLanguage(lang){
+		const combo = document.querySelector('.goog-te-combo');
+		if (combo) { combo.value = lang; combo.dispatchEvent(new Event('change')); }
+	}
+	function onChange(lang){
+		localStorage.setItem('dizco_lang', lang);
+		applyDir(lang);
+		setGoogleLanguage(lang);
+		if (topSel && topSel.value !== lang) topSel.value = lang;
+		if (footSel && footSel.value !== lang) footSel.value = lang;
+	}
+	function bind(){
+		if (topSel) topSel.addEventListener('change', () => onChange(topSel.value));
+		if (footSel) footSel.addEventListener('change', () => onChange(footSel.value));
+	}
+	bind();
+	// Load Google translate once
+	if (!window.google || !window.google.translate){
+		window.googleTranslateElementInit = function(){
+			try{ new window.google.translate.TranslateElement({pageLanguage:'en', includedLanguages:'en,es,fr,pt,it,ar', autoDisplay:false}, 'google_translate_element'); setTimeout(()=>setGoogleLanguage(saved), 400); }catch(e){}
+		};
+		const s = document.createElement('script');
+		s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+		document.head.appendChild(s);
+	} else {
+		setTimeout(()=>setGoogleLanguage(saved), 200);
+	}
 })();
 
 // Mobile nav toggle
@@ -68,8 +90,6 @@ if (reviewsGrid && prevBtn && nextBtn) {
 	});
 }
 
-// No counters (removed on request)
-
 // Scroll reveal for fade-in cards
 function fadeInCardsOnScroll() {
   const cards = document.querySelectorAll('.card, .feature, .review-card');
@@ -87,7 +107,7 @@ if (document.readyState === 'loading') {
   fadeInCardsOnScroll();
 }
 
-// Show Christmas greeting toast helper
+// Christmas toast helper
 function showChristmasToast(){
   try{
     const toast = document.getElementById('christmas-toast');
@@ -95,7 +115,7 @@ function showChristmasToast(){
       toast.classList.add('show');
       setTimeout(()=>{ if(toast && toast.style.display!=='none'){ toast.style.display='none'; } }, 6000);
     }
-  }catch(e){/* ignore */}
+  }catch(e){}
 }
 
 

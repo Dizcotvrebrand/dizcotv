@@ -442,5 +442,7 @@ body#logo-splash-active {
 .footer-lang label{font-weight:700;font-size:.95em}
 .footer-lang select{appearance:none;background:#191814;border:1px solid rgba(212,175,55,.35);color:#efe6c3;border-radius:8px;padding:8px 10px;min-width:170px}
 .footer-lang select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.15)}
+/* Hide Google stock widget, we control via our select */
+#google_translate_element{position:absolute;left:-9999px;top:-9999px;visibility:hidden;height:0;width:0;overflow:hidden}
 
 
