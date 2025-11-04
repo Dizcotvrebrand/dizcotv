@@ -16,18 +16,19 @@ controls.enableDamping = true;
 controls.enablePan = false;
 controls.minDistance = 1.6;
 controls.maxDistance = 4;
+controls.enableZoom = false;
 
 // Lights with warm golden tone
-const key = new THREE.SpotLight(0xf5c842, 1.6, 0, Math.PI / 6, 0.3, 1);
+const key = new THREE.SpotLight(0xf5c842, 1.4, 0, Math.PI / 6, 0.35, 1);
 key.position.set(2.5, 3.2, 2.5);
 scene.add(key);
 scene.add(key.target);
 
-const rim = new THREE.DirectionalLight(0xd4af37, 0.8);
+const rim = new THREE.DirectionalLight(0xd4af37, 0.85);
 rim.position.set(-3, 2.5, -2);
 scene.add(rim);
 
-const ambient = new THREE.AmbientLight(0xffffff, 0.25);
+const ambient = new THREE.AmbientLight(0xffffff, 0.35);
 scene.add(ambient);
 
 // Golden material
@@ -86,11 +87,31 @@ group.add(base);
 group.rotation.y = 0.6;
 scene.add(group);
 
+// Subtle gold particle field
+const particles = (() => {
+	const count = 500;
+	const geom = new THREE.BufferGeometry();
+	const positions = new Float32Array(count * 3);
+	for (let i = 0; i < count; i++) {
+		const r = 3 + Math.random() * 3.5;
+		const theta = Math.random() * Math.PI * 2;
+		const y = (Math.random() - 0.5) * 1.6;
+		positions[i * 3 + 0] = Math.cos(theta) * r;
+		positions[i * 3 + 1] = y;
+		positions[i * 3 + 2] = Math.sin(theta) * r;
+	}
+	geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+	const mat = new THREE.PointsMaterial({ color: 0xf5c842, size: 0.015, transparent: true, opacity: 0.7 });
+	const pts = new THREE.Points(geom, mat);
+	scene.add(pts);
+	return pts;
+})();
+
 // Resize
 function resize() {
 	const rect = canvas.getBoundingClientRect();
 	const w = rect.width || window.innerWidth;
-	const h = rect.height || Math.max(400, window.innerHeight * 0.6);
+	const h = rect.height || Math.max(260, window.innerHeight * 0.42);
 	renderer.setSize(w, h, false);
 	camera.aspect = w / h;
 	camera.updateProjectionMatrix();
@@ -102,12 +123,14 @@ window.addEventListener('resize', resize);
 let t = 0;
 function tick() {
 	t += 0.004;
-	group.rotation.y += 0.0025; // slower rotation for a calmer feel
+	group.rotation.y += 0.0022;
 	group.position.y = Math.sin(t) * 0.02;
+	particles.rotation.y -= 0.0008;
 	controls.update();
 	renderer.render(scene, camera);
 	requestAnimationFrame(tick);
 }
-tick();
+
+requestAnimationFrame(tick);
 
 
