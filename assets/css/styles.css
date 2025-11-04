@@ -217,9 +217,8 @@ border:1px solid transparent;border-radius:14px;padding:12px;display:flex;align-
 .table tr:nth-child(even){background:rgba(255,255,255,.02)}
 
 /* Floating WhatsApp button */
-.fab-whatsapp{position:fixed;right:16px;bottom:18px;z-index:20}
-.fab-whatsapp a{display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#25D366,#1ebc57);color:#0b0b0d;text-decoration:none;box-shadow:0 10px 24px rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.2)}
-.fab-whatsapp a svg{filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
+/* Hide floating WhatsApp button (chatbot handles chat) */
+.fab-whatsapp{display:none!important}
 
 /* Forms */
 form{display:grid;gap:12px;max-width:720px}
