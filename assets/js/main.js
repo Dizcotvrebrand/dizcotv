@@ -70,15 +70,15 @@ if (document.readyState === 'loading') {
   fadeInCardsOnScroll();
 }
 
-// Christmas greeting toast on every visit
-(function(){
+// Show Christmas greeting toast helper
+function showChristmasToast(){
   try{
     const toast = document.getElementById('christmas-toast');
     if(toast){
       toast.classList.add('show');
       setTimeout(()=>{ if(toast && toast.style.display!=='none'){ toast.style.display='none'; } }, 6000);
     }
-  }catch(e){ /* ignore */ }
-})();
+  }catch(e){/* ignore */}
+}
 
 

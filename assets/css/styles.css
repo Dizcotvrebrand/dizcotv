@@ -219,13 +219,23 @@ label{font-weight:600}
 }
 
 @media (max-width: 540px){
-	.hero{padding:4px 0 4px}
-	.hero-grid{gap:8px}
-	.hero-copy h1{margin:2px 0 3px}
+	/* Header and banner */
+	.site-header .header-inner{min-height:56px}
+	.top-banner{padding:5px 0}
+	/* Containers */
+	.container{padding:0 14px}
+	/* Hero */
+	.hero{padding:6px 0 6px}
+	.hero-grid{gap:8px;grid-template-columns:1fr}
+	.hero-copy h1{margin:2px 0 4px;font-size:clamp(22px,6.5vw,34px)}
 	.hero-copy p{margin:0 0 6px}
+	.badge{padding:4px 10px;font-size:.9em}
 	.hero-ctas{gap:6px}
-	.hero-visual{min-height:160px}
-	.features{padding:28px 12px}
+	/* Hide heavy 3D visual on very small screens to remove extra space */
+	.hero-visual{display:none}
+	/* Sections */
+	.features{padding:20px 12px}
+	.section{padding:20px 0}
 }
 
 /* Catalog grid on App Rebrand page (Fiverr-like big cards) */
