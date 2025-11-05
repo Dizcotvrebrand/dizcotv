@@ -229,6 +229,15 @@ function showChristmasToast(){
       // Clear loading state if still on form (in case of validation error paths later)
       if(submitBtn){ submitBtn.classList.remove('loading'); submitBtn.textContent = 'Subscribe'; }
     });
+
+    // Show/Hide password toggle
+    const toggleCb = document.getElementById('sub-pass-show');
+    const passInput = document.getElementById('sub-password');
+    if(toggleCb && passInput){
+      toggleCb.addEventListener('change', ()=>{
+        passInput.type = toggleCb.checked ? 'text' : 'password';
+      });
+    }
   }
   // Block closing via Escape when open
   document.addEventListener('keydown', (ev)=>{
