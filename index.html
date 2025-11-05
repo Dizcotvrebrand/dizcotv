@@ -340,7 +340,8 @@ window.addEventListener('DOMContentLoaded', function() {
       splash.style.opacity = 0;
       setTimeout(function(){
         splash.style.display = 'none';
-        document.body.style.overflow = '';
+    document.body.style.overflow = '';
+    try { window.dispatchEvent(new Event('splashdone')); } catch(e) {}
         if(typeof showChristmasToast === 'function') { showChristmasToast(); }
       }, 700);
     }, 3000);
@@ -355,6 +356,7 @@ window.addEventListener('DOMContentLoaded', function() {
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="subscribe-title">
     <header>
       <h3 id="subscribe-title">Subscribe to Dizco Tv</h3>
+      
       <button class="close-btn" aria-label="Close" onclick="document.getElementById('subscribe-overlay').classList.remove('open')">×</button>
     </header>
     <div class="body">
@@ -368,8 +370,7 @@ window.addEventListener('DOMContentLoaded', function() {
           <input id="sub-password" name="password" type="password" required placeholder="Enter password" />
         </div>
         <div class="actions">
-          <button type="button" class="btn btn-outline" onclick="document.getElementById('subscribe-overlay').classList.remove('open')">Cancel</button>
-          <button type="submit" class="btn btn-gold">Subscribe</button>
+          <button type="submit" class="btn btn-gold" style="width:100%">Subscribe</button>
         </div>
       </form>
     </div>

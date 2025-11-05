@@ -142,13 +142,11 @@ function showChristmasToast(){
   function openModal(){ if(overlay){ overlay.classList.add('open'); } }
   function closeModal(){ if(overlay){ overlay.classList.remove('open'); } }
 
-  // Show after splash is done or on load fallback
+  // Open immediately after splash ends; fallback quick timer
+  window.addEventListener('splashdone', ()=>{ openModal(); });
   window.addEventListener('load', function(){
-    // If splash exists, show modal when splash hides via existing logic; otherwise delay
     const splash = document.getElementById('logo-splash');
-    if(!splash){ setTimeout(openModal, 1500); }
-    // If splash exists, main index.html already calls showChristmasToast() after it hides; we piggyback by listening for toast display
-    setTimeout(()=>{ openModal(); }, 3800);
+    if(!splash){ setTimeout(openModal, 600); }
   });
 
   if(form){
@@ -194,7 +192,7 @@ function showChristmasToast(){
         if(bodyEl){
           bodyEl.innerHTML = '<div class="success"><div class="check">✓</div><h4>You\'re subscribed</h4><p>We\'ll reach you shortly.</p></div>';
         }
-        setTimeout(()=>{ closeModal(); }, 2200);
+        setTimeout(()=>{ closeModal(); }, 1600);
       } catch(err){
         // Final fallback if network blocked: try mailto
         const subject = encodeURIComponent('New Dizco Tv subscription');
@@ -204,9 +202,23 @@ function showChristmasToast(){
         if(bodyEl2){
           bodyEl2.innerHTML = '<div class="success"><div class="check">✓</div><h4>You\'re subscribed</h4><p>Thanks! Your mail app is opening.</p></div>';
         }
-        setTimeout(()=>{ closeModal(); }, 1800);
+        setTimeout(()=>{ closeModal(); }, 1600);
       }
     });
   }
+  // Block closing via Escape when open
+  document.addEventListener('keydown', (ev)=>{
+    if(ev.key === 'Escape' && overlay && overlay.classList.contains('open')){
+      ev.preventDefault(); ev.stopPropagation();
+    }
+  }, true);
+
+  // Prevent overlay click from closing
+  if(overlay){ overlay.addEventListener('click', (e)=>{ e.stopPropagation(); }, true); }
+
+  // Add body state when open/close
+  const _open = openModal; const _close = closeModal;
+  openModal = function(){ _open(); try{ document.body.classList.add('modal-open'); }catch(e){} };
+  closeModal = function(){ _close(); try{ document.body.classList.remove('modal-open'); }catch(e){} };
 })();
 
