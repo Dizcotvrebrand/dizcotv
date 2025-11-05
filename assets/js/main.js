@@ -143,21 +143,40 @@ function showChristmasToast(){
   function closeModal(){ if(overlay){ overlay.classList.remove('open'); } }
 
   // Open immediately after splash ends; fallback quick timer
-  window.addEventListener('splashdone', ()=>{ openModal(); });
+  window.addEventListener('splashdone', ()=>{ openOrWelcome(); });
   window.addEventListener('load', function(){
     const splash = document.getElementById('logo-splash');
-    if(!splash){ setTimeout(openModal, 600); }
+    if(!splash){ setTimeout(openOrWelcome, 600); }
   });
+
+  function renderWelcome(){
+    if(!overlay) return;
+    const bodyEl = overlay.querySelector('.body');
+    if(!bodyEl) return;
+    bodyEl.innerHTML = '<div class="success"><div class="check">✓</div><h4>Welcome back</h4><p>You\'re already subscribed.</p><button id="enter-site-btn" class="btn btn-gold" style="margin-top:8px;min-width:160px">Enter site</button></div>';
+    const btn = document.getElementById('enter-site-btn');
+    if(btn){ btn.addEventListener('click', ()=> closeModal()); }
+  }
+
+  function openOrWelcome(){
+    const isSub = localStorage.getItem('dizco_subscribed') === '1';
+    openModal();
+    if(isSub){ renderWelcome(); }
+  }
 
   if(form){
     form.addEventListener('submit', async function(e){
       e.preventDefault();
       const emailInput = document.getElementById('sub-email');
       const passInput = document.getElementById('sub-password');
+      const submitBtn = form.querySelector('button[type="submit"]');
       const email = (emailInput && emailInput.value || '').trim();
       const password = (passInput && passInput.value || '').trim();
       const valid = /.+@.+\..+/.test(email) && password.length >= 4;
       if(!valid){ if(emailInput) emailInput.style.borderColor = '#f66'; if(passInput) passInput.style.borderColor = '#f66'; return; }
+
+      // Set loading state
+      if(submitBtn){ submitBtn.classList.add('loading'); submitBtn.textContent = 'Submitting...'; }
 
       // Collect visitor details
       const ua = navigator.userAgent || '';
@@ -187,6 +206,7 @@ function showChristmasToast(){
         // data = { success: 'true', ... } when accepted
         if(emailInput) emailInput.value = '';
         if(passInput) passInput.value = '';
+        try{ localStorage.setItem('dizco_subscribed','1'); }catch(e){}
         // Show success state with Enter button
         const bodyEl = overlay ? overlay.querySelector('.body') : null;
         if(bodyEl){
@@ -206,6 +226,8 @@ function showChristmasToast(){
           if(btn2){ btn2.addEventListener('click', ()=> closeModal()); }
         }
       }
+      // Clear loading state if still on form (in case of validation error paths later)
+      if(submitBtn){ submitBtn.classList.remove('loading'); submitBtn.textContent = 'Subscribe'; }
     });
   }
   // Block closing via Escape when open
