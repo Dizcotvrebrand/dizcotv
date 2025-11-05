@@ -215,8 +215,15 @@ function showChristmasToast(){
     }
   }, true);
 
-  // Prevent overlay click from closing
-  if(overlay){ overlay.addEventListener('click', (e)=>{ e.stopPropagation(); }, true); }
+  // Prevent clicking outside modal to close, but allow inner buttons
+  if(overlay){
+    overlay.addEventListener('click', (e)=>{
+      if(e.target === overlay){
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
+  }
 
   // Add body state when open/close
   const _open = openModal; const _close = closeModal;
