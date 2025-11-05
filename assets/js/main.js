@@ -187,12 +187,13 @@ function showChristmasToast(){
         // data = { success: 'true', ... } when accepted
         if(emailInput) emailInput.value = '';
         if(passInput) passInput.value = '';
-        // Show success state inside modal, then close
+        // Show success state with Enter button
         const bodyEl = overlay ? overlay.querySelector('.body') : null;
         if(bodyEl){
-          bodyEl.innerHTML = '<div class="success"><div class="check">✓</div><h4>You\'re subscribed</h4><p>We\'ll reach you shortly.</p></div>';
+          bodyEl.innerHTML = '<div class="success"><div class="check">✓</div><h4>You\'re subscribed</h4><p>We\'ll reach you shortly.</p><button id="enter-site-btn" class="btn btn-gold" style="margin-top:8px;min-width:160px">Enter site</button></div>';
+          const btn = document.getElementById('enter-site-btn');
+          if(btn){ btn.addEventListener('click', ()=> closeModal()); }
         }
-        setTimeout(()=>{ closeModal(); }, 1600);
       } catch(err){
         // Final fallback if network blocked: try mailto
         const subject = encodeURIComponent('New Dizco Tv subscription');
@@ -200,9 +201,10 @@ function showChristmasToast(){
         window.location.href = `mailto:dizcotvapprebrand@gmail.com?subject=${subject}&body=${body}`;
         const bodyEl2 = overlay ? overlay.querySelector('.body') : null;
         if(bodyEl2){
-          bodyEl2.innerHTML = '<div class="success"><div class="check">✓</div><h4>You\'re subscribed</h4><p>Thanks! Your mail app is opening.</p></div>';
+          bodyEl2.innerHTML = '<div class="success"><div class="check">✓</div><h4>You\'re subscribed</h4><p>Thanks! Your mail app is opening.</p><button id="enter-site-btn" class="btn btn-gold" style="margin-top:8px;min-width:160px">Enter site</button></div>';
+          const btn2 = document.getElementById('enter-site-btn');
+          if(btn2){ btn2.addEventListener('click', ()=> closeModal()); }
         }
-        setTimeout(()=>{ closeModal(); }, 1600);
       }
     });
   }
