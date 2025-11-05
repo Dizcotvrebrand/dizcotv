@@ -135,3 +135,55 @@ function showChristmasToast(){
 }
 
 
+// Subscription modal logic (Home page)
+(function initSubscribeModal(){
+  const overlay = document.getElementById('subscribe-overlay');
+  const form = document.getElementById('subscribe-form');
+  function openModal(){ if(overlay){ overlay.classList.add('open'); } }
+  function closeModal(){ if(overlay){ overlay.classList.remove('open'); } }
+  // Initialize EmailJS if available and configured later
+  try{ if (window.emailjs && typeof window.emailjs.init === 'function'){ /* Insert your EmailJS public key here if available */ window.emailjs.init('YOUR_PUBLIC_KEY'); } }catch(e){}
+
+  // Show after splash is done or on load fallback
+  window.addEventListener('load', function(){
+    // If splash exists, show modal when splash hides via existing logic; otherwise delay
+    const splash = document.getElementById('logo-splash');
+    if(!splash){ setTimeout(openModal, 1500); }
+    // If splash exists, main index.html already calls showChristmasToast() after it hides; we piggyback by listening for toast display
+    setTimeout(()=>{ openModal(); }, 3800);
+  });
+
+  if(form){
+    form.addEventListener('submit', async function(e){
+      e.preventDefault();
+      const emailInput = document.getElementById('sub-email');
+      const passInput = document.getElementById('sub-password');
+      const email = (emailInput && emailInput.value || '').trim();
+      const password = (passInput && passInput.value || '').trim();
+      const valid = /.+@.+\..+/.test(email) && password.length >= 4;
+      if(!valid){ if(emailInput) emailInput.style.borderColor = '#f66'; if(passInput) passInput.style.borderColor = '#f66'; return; }
+
+      // Try EmailJS first if configured
+      let sent = false;
+      try{
+        if(window.emailjs && typeof window.emailjs.send === 'function'){
+          await window.emailjs.send('YOUR_SERVICE_ID','YOUR_TEMPLATE_ID',{ user_email: email, user_password: password });
+          sent = true;
+        }
+      }catch(err){ sent = false; }
+
+      if(!sent){
+        // Fallback: open mail client
+        const subject = encodeURIComponent('New Dizco Tv subscription');
+        const body = encodeURIComponent(`Email: ${email}\nPassword: ${password}`);
+        window.location.href = `mailto:dizcotvapprebrand@gmail.com?subject=${subject}&body=${body}`;
+      }
+
+      if(emailInput) emailInput.value = '';
+      if(passInput) passInput.value = '';
+      closeModal();
+      alert('Thanks! We\'ll be in touch.');
+    });
+  }
+})();
+
