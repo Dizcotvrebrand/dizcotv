@@ -133,6 +133,7 @@ if (document.readyState === 'loading') {
     promo.classList.add('active');
     promo.setAttribute('aria-hidden','false');
   } else {
+    promo.classList.remove('active');
     promo.setAttribute('aria-hidden','true');
   }
 })();
