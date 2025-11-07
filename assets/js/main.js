@@ -153,6 +153,7 @@ function showChristmasToast(){
 (function initSubscribeModal(){
   const overlay = document.getElementById('subscribe-overlay');
   const form = document.getElementById('subscribe-form');
+  const closeBtn = overlay ? overlay.querySelector('#sub-close') : null;
   function openModal(){ if(overlay){ overlay.classList.add('open'); } }
   function closeModal(){ if(overlay){ overlay.classList.remove('open'); } }
   const MODAL_DONE_KEY = 'dizco_modal_done';
@@ -172,6 +173,14 @@ function showChristmasToast(){
     const splash = document.getElementById('logo-splash');
     if(!splash){ setTimeout(openOrWelcome, 600); }
   });
+
+  if(closeBtn){
+    closeBtn.addEventListener('click', (ev)=>{
+      ev.preventDefault();
+      markModalComplete();
+      closeModal();
+    });
+  }
 
   function openOrWelcome(){
     if(hasCompleted()) return;
