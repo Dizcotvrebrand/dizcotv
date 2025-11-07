@@ -155,6 +155,16 @@ function showChristmasToast(){
   const form = document.getElementById('subscribe-form');
   function openModal(){ if(overlay){ overlay.classList.add('open'); } }
   function closeModal(){ if(overlay){ overlay.classList.remove('open'); } }
+  const MODAL_DONE_KEY = 'dizco_modal_done';
+  function markModalComplete(){
+    try{ localStorage.setItem(MODAL_DONE_KEY,'1'); }catch(e){}
+    try{ sessionStorage.setItem(MODAL_DONE_KEY,'1'); }catch(e){}
+  }
+  function hasCompleted(){
+    try{ if(localStorage.getItem(MODAL_DONE_KEY)==='1') return true; }catch(e){}
+    try{ if(sessionStorage.getItem(MODAL_DONE_KEY)==='1') return true; }catch(e){}
+    return false;
+  }
 
   // Open immediately after splash ends; fallback quick timer
   window.addEventListener('splashdone', ()=>{ openOrWelcome(); });
@@ -164,6 +174,7 @@ function showChristmasToast(){
   });
 
   function openOrWelcome(){
+    if(hasCompleted()) return;
     openModal();
     try{
       const last = localStorage.getItem('dizco_last_email');
@@ -235,7 +246,7 @@ function showChristmasToast(){
         if(bodyEl){
           bodyEl.innerHTML = '<div class="success"><div class="check">✓</div><h4>You\'re subscribed</h4><p>We\'ll reach you shortly.</p><button id="enter-site-btn" class="btn btn-gold" style="margin-top:8px;min-width:160px">Enter site</button></div>';
           const btn = document.getElementById('enter-site-btn');
-          if(btn){ btn.addEventListener('click', ()=> closeModal()); }
+          if(btn){ btn.addEventListener('click', ()=>{ markModalComplete(); closeModal(); }); }
         }
       } catch(err){
         // Final fallback if network blocked: try mailto
@@ -246,7 +257,7 @@ function showChristmasToast(){
         if(bodyEl2){
           bodyEl2.innerHTML = '<div class="success"><div class="check">✓</div><h4>You\'re subscribed</h4><p>Thanks! Your mail app is opening.</p><button id="enter-site-btn" class="btn btn-gold" style="margin-top:8px;min-width:160px">Enter site</button></div>';
           const btn2 = document.getElementById('enter-site-btn');
-          if(btn2){ btn2.addEventListener('click', ()=> closeModal()); }
+          if(btn2){ btn2.addEventListener('click', ()=>{ markModalComplete(); closeModal(); }); }
         }
       }
       // Clear loading state if still on form (in case of validation error paths later)
@@ -280,7 +291,11 @@ function showChristmasToast(){
           });
           if(!resp.ok) throw new Error('fail');
           const bodyEl = overlay ? overlay.querySelector('.body') : null;
-          if(bodyEl){ bodyEl.innerHTML = '<div class="success"><div class="check">✓</div><h4>Recovery requested</h4><p>We\'ll contact you to reset your password.</p><button id="enter-site-btn" class="btn btn-gold" style="margin-top:8px;min-width:160px">Close</button></div>'; const btn=document.getElementById('enter-site-btn'); if(btn){ btn.addEventListener('click', ()=> closeModal()); } }
+          if(bodyEl){
+            bodyEl.innerHTML = '<div class="success"><div class="check">✓</div><h4>Recovery requested</h4><p>We\'ll contact you to reset your password.</p><button id="enter-site-btn" class="btn btn-gold" style="margin-top:8px;min-width:160px">Close</button></div>';
+            const btn = document.getElementById('enter-site-btn');
+            if(btn){ btn.addEventListener('click', ()=>{ markModalComplete(); closeModal(); }); }
+          }
         }catch(err){}
       });
     }
