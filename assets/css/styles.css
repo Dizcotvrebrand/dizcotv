@@ -347,6 +347,67 @@ body{
   display: inline-block;
   animation: banner-slide-in 1.4s cubic-bezier(.62,-0.04,.24,1.09) 1;
 }
+
+.promo-banner {
+  display: none;
+  margin: 0 auto 26px;
+  padding: 0 20px;
+}
+.promo-banner.active {
+  display: block;
+}
+.promo-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 22px 28px;
+  border-radius: 18px;
+  background: linear-gradient(120deg, rgba(34,28,5,0.52) 0%, rgba(16,12,2,0.88) 60%, rgba(212,175,55,0.18) 100%);
+  border: 1.4px solid rgba(212,175,55,0.35);
+  box-shadow: 0 16px 48px rgba(8,7,2,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.promo-copy h2 {
+  margin: 6px 0 8px;
+  font-size: clamp(26px, 4vw, 40px);
+  color: #f6f0d4;
+}
+.promo-copy p {
+  margin: 0;
+  color: #d9d4c3;
+  max-width: 620px;
+}
+.promo-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.8em;
+  font-weight: 700;
+  color: var(--gold);
+}
+.promo-kicker::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: rgba(212,175,55,0.45);
+}
+.promo-inner .btn {
+  flex-shrink: 0;
+  min-width: 190px;
+  text-align: center;
+}
+@media (max-width: 768px) {
+  .promo-inner {
+    flex-direction: column;
+    text-align: center;
+    padding: 22px 20px;
+  }
+  .promo-inner .btn {
+    width: 100%;
+  }
+}
 @keyframes banner-slide-in {
   from { transform: translateX(85vw); opacity: 0.23; }
   to   { transform: translateX(0);     opacity: 1; }

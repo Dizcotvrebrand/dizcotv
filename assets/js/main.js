@@ -123,6 +123,20 @@ if (document.readyState === 'loading') {
   cycle();
 })();
 
+// Friday promo banner visibility (Home page)
+(function showFridayPromo(){
+  const promo = document.getElementById('friday-banner');
+  if(!promo) return;
+  const now = new Date();
+  const isFriday = now.getDay() === 5;
+  if(isFriday){
+    promo.classList.add('active');
+    promo.setAttribute('aria-hidden','false');
+  } else {
+    promo.setAttribute('aria-hidden','true');
+  }
+})();
+
 // Christmas toast helper
 function showChristmasToast(){
   try{
