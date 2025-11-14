@@ -132,9 +132,11 @@ if (document.readyState === 'loading') {
   if(isFriday){
     promo.classList.add('active');
     promo.setAttribute('aria-hidden','false');
+    promo.style.display = 'block';
   } else {
     promo.classList.remove('active');
     promo.setAttribute('aria-hidden','true');
+    promo.style.display = 'none';
   }
 })();
 
