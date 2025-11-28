@@ -335,3 +335,121 @@ function showChristmasToast(){
   closeModal = function(){ _close(); try{ document.body.classList.remove('modal-open'); }catch(e){} };
 })();
 
+
+// Fiverr-style gig preview on App Rebrand page
+(function initGigPreview(){
+  const cards = document.querySelectorAll('.gig-card');
+  const preview = document.getElementById('gigPreview');
+  if(!cards.length || !preview) return;
+
+  const emptyState = preview.querySelector('.gig-preview__empty');
+  const content = preview.querySelector('.gig-preview__content');
+  const mainImg = preview.querySelector('[data-gig-main]');
+  const thumbsWrap = preview.querySelector('[data-gig-thumbs]');
+  const titleEl = preview.querySelector('[data-gig-title]');
+  const descEl = preview.querySelector('[data-gig-description]');
+  const featureList = preview.querySelector('[data-gig-features]');
+  const ratingEl = preview.querySelector('[data-gig-rating]');
+  const deliveryEl = preview.querySelector('[data-gig-delivery]');
+  const priceEl = preview.querySelector('[data-gig-price]');
+  const ctaEl = preview.querySelector('[data-gig-cta]');
+  const badgeEl = preview.querySelector('[data-gig-badge]');
+
+  let currentName = '';
+
+  function setActiveCard(target){
+    cards.forEach(card => card.classList.remove('active'));
+    target.classList.add('active');
+  }
+
+  function setMainImage(src){
+    if(!mainImg || !src) return;
+    mainImg.src = src;
+    mainImg.alt = `${currentName} gig preview`;
+  }
+
+  function renderThumbs(images){
+    if(!thumbsWrap) return;
+    thumbsWrap.innerHTML = '';
+    images.forEach((src, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'gallery-thumb' + (idx === 0 ? ' active' : '');
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = `${currentName} screenshot ${idx + 1}`;
+      btn.appendChild(img);
+      btn.addEventListener('click', ()=>{
+        thumbsWrap.querySelectorAll('.gallery-thumb').forEach(el => el.classList.remove('active'));
+        btn.classList.add('active');
+        setMainImage(src);
+      });
+      thumbsWrap.appendChild(btn);
+    });
+  }
+
+  function renderFeatures(features){
+    if(!featureList) return;
+    featureList.innerHTML = '';
+    features.filter(Boolean).forEach(text => {
+      const li = document.createElement('li');
+      li.textContent = text.trim();
+      featureList.appendChild(li);
+    });
+  }
+
+  function formatPrice(value){
+    if(!value) return 'Custom quote';
+    return value.startsWith('$') ? value : `$${value}`;
+  }
+
+  function updatePreview(card){
+    if(!content || !emptyState) return;
+    setActiveCard(card);
+    currentName = card.dataset.app || 'App rebrand';
+
+    const images = (card.dataset.images || '')
+      .split('|')
+      .map(str => str.trim())
+      .filter(Boolean);
+    if(!images.length){
+      const fallback = card.querySelector('img');
+      if(fallback) images.push(fallback.src);
+    }
+    renderThumbs(images);
+    if(images[0]) setMainImage(images[0]);
+
+    if(titleEl) titleEl.textContent = `Preview: ${currentName}`;
+    if(descEl) descEl.textContent = card.dataset.description || 'Full custom rebrand delivered with premium assets.';
+    const features = (card.dataset.features || '').split(';').map(item => item.trim()).filter(Boolean);
+    renderFeatures(features);
+    if(ratingEl){
+      const rating = card.dataset.rating || '5.0';
+      const orders = card.dataset.orders ? `${card.dataset.orders}+ orders` : 'Top seller';
+      ratingEl.textContent = `★ ${rating} • ${orders}`;
+    }
+    if(deliveryEl) deliveryEl.textContent = card.dataset.delivery || 'Standard delivery';
+    const priceLabel = formatPrice(card.dataset.price || '');
+    if(priceEl) priceEl.textContent = priceLabel;
+    if(ctaEl){
+      ctaEl.textContent = `Continue (${priceLabel})`;
+      ctaEl.href = card.dataset.link || '#';
+    }
+    if(badgeEl) badgeEl.textContent = `${card.dataset.app || 'Rebrand'} • Fiverr preview`;
+
+    emptyState.hidden = true;
+    content.hidden = false;
+  }
+
+  cards.forEach(card => {
+    card.addEventListener('click', ()=> updatePreview(card));
+    card.addEventListener('keypress', (ev)=>{
+      if(ev.key === 'Enter' || ev.key === ' '){
+        ev.preventDefault();
+        updatePreview(card);
+      }
+    });
+  });
+
+  updatePreview(cards[0]);
+})();

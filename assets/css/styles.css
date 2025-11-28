@@ -377,6 +377,270 @@ label{font-weight:600}
 @media (max-width:900px){.brand-grid{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:520px){.brand-grid{grid-template-columns:1fr}}
 
+/* Fiverr-style gig marketplace */
+.gig-market{padding-bottom:0}
+.gig-market-header{
+  display:flex;
+  justify-content:space-between;
+  gap:24px;
+  padding:20px 24px;
+  margin-bottom:26px;
+  border:1px solid rgba(212,175,55,.15);
+  border-radius:18px;
+}
+.gig-market-meta{
+  display:flex;
+  gap:18px;
+  text-align:right;
+  flex-wrap:wrap;
+  align-items:flex-start;
+}
+.gig-market-meta div{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  color:#dacfa9;
+  min-width:90px;
+}
+.gig-market-meta strong{
+  font-size:1.7em;
+  color:var(--gold);
+  line-height:1.1;
+}
+.gig-market-meta span{
+  font-size:.85em;
+  opacity:.85;
+}
+.gig-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1.25fr) minmax(0,0.85fr);
+  gap:26px;
+  align-items:flex-start;
+}
+.gig-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:18px;
+}
+.gig-card{
+  background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.008));
+  border:1px solid rgba(212,175,55,.15);
+  border-radius:16px;
+  cursor:pointer;
+  transition:transform .18s ease, border .18s ease, box-shadow .18s ease;
+  outline:none;
+  display:flex;
+  flex-direction:column;
+  min-height:260px;
+}
+.gig-card:focus-visible{
+  box-shadow:0 0 0 2px rgba(212,175,55,.7);
+}
+.gig-card.active{
+  border-color:var(--gold);
+  box-shadow:0 14px 32px rgba(0,0,0,.35);
+  transform:translateY(-3px);
+}
+.gig-card-thumb{
+  position:relative;
+  aspect-ratio:16/9;
+  overflow:hidden;
+  border-radius:16px 16px 0 0;
+}
+.gig-card-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.gig-card-body{
+  padding:16px 18px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.gig-card-category{
+  font-size:.85em;
+  color:#c7c0a7;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+}
+.gig-card h3{
+  margin:0;
+  font-size:1.08em;
+  color:#fff;
+}
+.gig-card-rating{
+  color:var(--gold);
+  font-weight:700;
+  font-size:.95em;
+}
+.gig-card-rating span{
+  color:#c4c4cf;
+  margin-left:4px;
+}
+.gig-card-price{
+  margin-top:auto;
+  font-weight:800;
+  font-size:1.1em;
+}
+.gig-preview{
+  position:sticky;
+  top:110px;
+  background:linear-gradient(180deg,rgba(17,13,4,.8),rgba(8,6,2,.95));
+  border:1px solid rgba(212,175,55,.18);
+  border-radius:20px;
+  padding:22px;
+  box-shadow:0 12px 32px rgba(0,0,0,.35);
+}
+.gig-preview__empty{
+  text-align:center;
+  color:#d9d1bb;
+}
+.gig-preview__empty h3{margin:0 0 6px;color:var(--gold);}
+.gig-preview__content{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+.gig-gallery{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.gig-gallery-main{
+  position:relative;
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid rgba(212,175,55,.18);
+  min-height:220px;
+  background:#0b0b0d;
+}
+.gig-gallery-main img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.gig-gallery-thumbs{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.gallery-thumb{
+  width:70px;
+  height:70px;
+  border-radius:10px;
+  border:1px solid rgba(212,175,55,.25);
+  background:#0d0c0a;
+  padding:0;
+  cursor:pointer;
+  overflow:hidden;
+  transition:border .15s ease, transform .15s ease;
+}
+.gallery-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.gallery-thumb.active{
+  border-color:var(--gold);
+  transform:translateY(-2px);
+}
+.gig-preview-info{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.gig-preview-tags{
+  font-size:.8em;
+  letter-spacing:.12em;
+  color:#cdbd89;
+  text-transform:uppercase;
+}
+.gig-preview-info h3{
+  margin:4px 0;
+  color:#fff;
+}
+.gig-preview-info p{
+  margin:0;
+  color:#dcd4c0;
+}
+.gig-preview-features{
+  list-style:none;
+  margin:4px 0 0;
+  padding:0;
+  display:grid;
+  gap:8px;
+}
+.gig-preview-features li{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  color:#f3efde;
+  font-size:.95em;
+}
+.gig-preview-features li::before{
+  content:"✓";
+  color:var(--gold);
+  font-weight:800;
+}
+.gig-preview-stats{
+  display:flex;
+  justify-content:space-between;
+  font-size:.92em;
+  color:#c9c2a7;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.gig-preview-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  flex-wrap:wrap;
+}
+.gig-preview-price span{
+  font-size:.85em;
+  color:#c9c2a7;
+}
+.gig-preview-price strong{
+  display:block;
+  font-size:1.8em;
+  color:var(--gold);
+  line-height:1.1;
+}
+.gig-preview .btn{
+  min-width:200px;
+  text-align:center;
+}
+@media (max-width:1100px){
+  .gig-layout{
+    grid-template-columns:1fr;
+  }
+  .gig-preview{
+    position:static;
+    order:-1;
+  }
+}
+@media (max-width:720px){
+  .gig-market-header{
+    flex-direction:column;
+  }
+  .gig-market-meta{
+    justify-content:space-between;
+    text-align:left;
+  }
+  .gig-preview-bottom{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .gig-preview .btn{
+    width:100%;
+  }
+}
+
 /* Glassmorphic luxury block backgrounds */
 .glass-bg {
   background: rgba(18, 13, 1, 0.37);
